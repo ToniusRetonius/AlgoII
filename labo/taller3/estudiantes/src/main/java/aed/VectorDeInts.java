@@ -10,8 +10,6 @@ class VectorDeInts implements SecuenciaDeInts {
     public VectorDeInts() {
         _vector = new int [CAPACIDAD_INICIAL];
         _longitud = 0;
-
-       
     }
 
     // constructor por referencia : ya toma el inicial y lo modifica (en este caso loe xtiende un  espacio más)
@@ -43,20 +41,27 @@ class VectorDeInts implements SecuenciaDeInts {
         _longitud++;
     }
 
-
     public int obtener(int i) {
         return _vector[i];
     }
 
-    public void quitarAtras() {
-       
+    public void quitarAtras( VectorDeInts vector) {
+        _longitud = vector._longitud - 1;
     }
 
     public void modificarPosicion(int indice, int valor) {
-        
+        _vector[indice] = valor;
     }
 
     public VectorDeInts copiar() {
+        VectorDeInts copia = new VectorDeInts();
+
+        for (int i = 0; i < _longitud; i++){
+            copia.agregarAtras(_vector[i]); 
+        }
+
+        copia._longitud = _longitud;
+        return copia;
     }
 
 }

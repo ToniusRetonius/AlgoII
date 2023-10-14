@@ -7,18 +7,17 @@ public class Recordatorio {
     private Horario _horario;
 
     public Recordatorio(String mensaje, Fecha fecha, Horario horario) {
-        _mensaje = mensaje;
-        _fecha = new Fecha(fecha);
-        _horario = horario;
+       _mensaje = mensaje;
+       _fecha = fecha;
+       _horario = horario;
     }
 
     public Horario horario() {
-        return _horario;
+      return _horario;
     }
 
     public Fecha fecha() {
-        Fecha res = new Fecha(_fecha);
-        return res;
+        return _fecha;
     }
 
     public String mensaje() {
@@ -27,7 +26,7 @@ public class Recordatorio {
 
     @Override
     public String toString() {
-        return _mensaje + " @ " + _fecha.toString() + " " + _horario.toString();
+       return _mensaje + " @ " + _fecha.toString() + _horario.toString();
     }
 
 }

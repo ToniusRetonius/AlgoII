@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 class DebuggingEjemplosTest {
 
     int calcularSumatoria(int total) {
-        int sum = 1;
-        for (int i = 1; i < 10 ; i++) {
+        int sum = 0;
+        for (int i = 1; i <= total ; i++) {
             //System.out.println(sum);
             sum += i;
         }
