@@ -33,7 +33,7 @@ class VectorDeInts implements SecuenciaDeInts {
         // si la length es igual al tamaño del vector => está lleno => aumento la capacidad del vector
         if (_longitud == _vector.length){
             // creo un nuevo vector con el constructor por referencia
-            _vector = new VectorDeInts(this)._vector;
+            _vector = new VectorDeInts()._vector;
         }
         // asigno en la última pos del vector viejo el elem i
         _vector[_longitud] =  i;
