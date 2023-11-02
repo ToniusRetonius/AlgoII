@@ -35,86 +35,124 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     }
 
     public T minimo(){
-        Nodo sig = new Nodo(raiz.value);
-        while (sig.izquierda != null){
-            sig = sig.izquierda;
+        Nodo min = raiz;
+        while (min.izquierda != null){
+            min = min.izquierda;
         }
-        return sig.value;
+        return min.value;
     }
-
     public T maximo(){
-        Nodo sig = new Nodo(raiz.value);
-        while (sig.derecha != null){
-            sig = sig.derecha;
+        Nodo max = raiz;
+        while (max.derecha != null){
+            max = max.derecha;
         }
-        return sig.value;
+        return max.value;
     }
 
     public void insertar(T elem){
         Nodo insert = new Nodo(elem);
-        
         if (raiz == null){
-            raiz = insert;
+            raiz = insert; 
+            longitud ++; 
         } else {
-            insertar_2(raiz, insert);
+            if(!pertenece(elem)){
+                insertar_2(raiz, insert);
+                longitud ++; 
+            }
         }
-        longitud = longitud + 1;
     }
     // me armo una función recursiva para poder recorrer el ABB
     private void insertar_2 (Nodo root , Nodo elemento){
         if (elemento.value.compareTo(root.value) > 0){
-            // si el valor a insertar es mayor a la raiz
+                // si el valor a insertar es mayor a la raiz
             if (root.derecha == null){
-                // si a derecha no hay nada, le mando el insert
-                root.derecha = elemento;
-                elemento.padre = root;
+                    // si a derecha no hay nada, le mando el insert
+                    root.derecha = elemento;
+                    elemento.padre = root;
             } else {
-                insertar_2(root.derecha, elemento);
+                    insertar_2(root.derecha, elemento);
             }
-        } else {
-            // caso que el elemento sea más chico que la raiz
+        } else if (elemento.value.compareTo(root.value) < 0){
+                // caso que el elemento sea más chico que la raiz
             if (root.izquierda == null){
-                // no tenemos nada a izquierda
-                root.izquierda = elemento;
-                elemento.padre = root;
+                    // no tenemos nada a izquierda
+                    root.izquierda = elemento;
+                    elemento.padre = root;
             } else {
-                insertar_2(root.izquierda, elemento);
+                    insertar_2(root.izquierda, elemento);
             }
-        }  
+        } else {
+            return;
+        }
     }
     
-    public boolean pertenece(T elem){
-        Nodo target = new Nodo(elem);
-        boolean res = false;
-        if (raiz == null){
+    public boolean pertenece (T elem){
+        return comparador(raiz, elem);
+    }
+    
+    public boolean comparador (Nodo actual , T elem){
+        if (actual == null){
             return false;
-        } else {
-            res = comparador(raiz, target);
-        }
-        return res;
-    }
-    
-    public boolean comparador(Nodo actual,Nodo elemento){
-        boolean res = false;
-        // si el elemento es mayor, compara recursivamente con el de la derecha
-        if (elemento.value.compareTo(actual.value) > 0){
-            comparador(actual.derecha, elemento);  
-        // si el elemento es menor compara recursivamente a izquierda
-        } else if (elemento.value.compareTo(actual.value) < 0){
-            comparador(actual.izquierda, elemento);
-        // si son el mismo true
-        } else if (elemento.value.compareTo(actual.value) == 0){
-            res = true;
-        } else {
-            res = false;
-        }
-        return res;
-    }
+        } 
+        if (actual.value.compareTo(elem) > 0){
+            // si el actual es más grande, busco en el subárbol a izquierda
+            return comparador(actual.izquierda, elem);
 
+        } else if (actual.value.compareTo(elem) < 0){
+            // si el actual es más chico, busco en el subárbol a derecha
+            return comparador(actual.derecha, elem);
+
+        } else {
+            return true;
+        }
+        
+    }
     public void eliminar(T elem){
-        throw new UnsupportedOperationException("No implementada aun");
+        // para eliminar un nodo tenemos casos : 
+        // el caso 1 : es una hoja, buscamos al padre y vuela
+        // el caso 2 : tiene un hijo (sea "p" el padre si existe y su hijo "h") reemplazamos la conexión ("p",borrado) por ("p","h")
+        // el caso 3 : tiene dos hijos ahora lo vemos 
+        // el caso 4 : es la raiz
+        // como tengo que recorrer mi árbol, empiezo por la raiz
+        raiz = search_and_destroy(raiz, elem);
     }
 
+    public Nodo search_and_destroy(Nodo actual, T elem){
+        // para no estar todo el tiempo metiendo la comparación en el if ...
+        int compare = elem.compareTo(actual.value);
+
+        // search
+        if (compare > 0){
+            actual.derecha = search_and_destroy(actual.derecha, elem);
+        } else if (compare < 0){
+            actual.izquierda = search_and_destroy(actual.izquierda, elem);
+        }
+        // destroy 
+        else {
+            // caso 1
+            if(actual.derecha == null && actual.izquierda == null){
+                if (actual.padre.value.compareTo(actual.value) > 0) {
+                    actual.padre.izquierda = null;
+                } else {
+                    actual.padre.derecha = null;
+                }
+            } 
+            // caso 2 
+            else if (actual.derecha == null && actual.izquierda != null){
+                if (actual.padre.value.compareTo(actual.value) > 0) {
+                    actual.padre.izquierda = null;
+                } else {
+                    actual.padre.derecha = null;
+                }
+            }
+        }
+        
+    }   
+    
+
+
+
+    
     public String toString(){
         throw new UnsupportedOperationException("No implementada aun");
     }
