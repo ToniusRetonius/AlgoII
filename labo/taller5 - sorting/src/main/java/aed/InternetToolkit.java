@@ -24,7 +24,16 @@ public class InternetToolkit {
 
     public Router[] kTopRouters(Router[] routers, int k, int umbral) {
         // vamos a hacer un max heap con las rutas de mayor trafico y extraer los k routers mayores que superan el umbral
-        Heap heap_de_routers = new Heap[routers]
+        // creamos el heap (verificar)
+        Heap heap_de_routers = new crearHeap(routers);
+        // 
+        heap_de_routers.construirMaxHeap();
+        // me pide devolver a lo sumo k que cumplan con el umbral, por tanto la longitud de mi arr res sera 
+        length_res = min(umbral, k);
+        for (int i = 0, i <= length_res, i++){
+
+        }
+
         return null;
     }
 

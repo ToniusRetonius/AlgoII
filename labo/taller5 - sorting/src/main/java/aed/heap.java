@@ -3,27 +3,25 @@ package aed;
 public class Heap {
     public Nodo[] Heap;
     public int size;
-
+    // cambiar tipo
     public class Nodo {
-        int valor;
+        Fragment valor;
 
-        public Nodo(int value){
-            this.valor = value;
+        public Nodo(Fragment val){
+            this.valor = val;
         }
     }
 
-    public Heap(Fragment[] arr){
+    public crearHeap(Fragment[] arr){
         int i = 0;
-        size = arr.length - 1;
-        Heap = new Nodo[size];
+        length = arr.length - 1;
+        H = new Nodo[size];
 
         while(i < size){
-            if (arr[i].compareTo(umbral) > 0){
-                // si el valor supera el umbral, lo metemos en el heap  
-                Heap[i] = new Nodo(arr[i]);
-            }
+            Heap[i] = new Nodo(arr[i]);
             i++;
         }
+        // arma el heap
         // O(n)
     }
 
@@ -37,11 +35,11 @@ public class Heap {
         int right = 2 * i + 2;
         int largest = i;
 
-        if (left < size && Heap[left].votos > Heap[largest].votos) {
+        if (left < size && Heap[left].valor > Heap[largest].valor) {
             largest = left;
         }
 
-        if (right < size && Heap[right].votos > Heap[largest].votos) {
+        if (right < size && Heap[right].valor > Heap[largest].valor) {
             largest = right;
         }
 
@@ -52,16 +50,18 @@ public class Heap {
         }
     }
 
-    public void modificarRaiz(int i){
-        this.Heap[0].votos = this.Heap[0].voto_total / i;
-        maxHeap(0);
-    }
+    public void intercambiar(int pos_padre, int pos_hijo){
 
-    public void intercambiar(int pos_padre, int pos_hijo)
-    {
         Nodo temporal;
         temporal = Heap[pos_padre];
         Heap[pos_padre] = Heap[pos_hijo];
         Heap[pos_hijo] = temporal;
+    }
+
+    public void desencolar(){
+        // la idea sera intercambiar el nodo hoja(minimo) con el max, eliminar la hoja y poner en el array de res el valor del max desecolado
+        
+        hoja = Heap[size]
+
     }
 }
