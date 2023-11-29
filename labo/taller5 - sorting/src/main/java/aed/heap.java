@@ -1,23 +1,25 @@
 package aed;
 
-public class Heap {
+public class Heap{
+
     public Nodo[] Heap;
     public int size;
     // cambiar tipo
-    public class Nodo {
-        Fragment valor;
 
-        public Nodo(Fragment val){
+    public class Nodo {
+        Router valor;
+
+        public Nodo(Router val){
             this.valor = val;
         }
     }
 
-    public crearHeap(Fragment[] arr){
+    public Heap(Router[] arr){
         int i = 0;
-        length = arr.length - 1;
-        H = new Nodo[size];
+        int len = arr.length - 1;
+        Nodo[] Heap = new Nodo[size];
 
-        while(i < size){
+        while(i < len){
             Heap[i] = new Nodo(arr[i]);
             i++;
         }
@@ -25,7 +27,7 @@ public class Heap {
         // O(n)
     }
 
-    private void construirMaxHeap(){
+    public void construirMaxHeap(){
         for (int i = (this.size / 2) - 1; i >= 0 ; i--) {
             maxHeap(i);
         }
@@ -35,11 +37,11 @@ public class Heap {
         int right = 2 * i + 2;
         int largest = i;
 
-        if (left < size && Heap[left].valor > Heap[largest].valor) {
+        if ((left < size) && Heap[left].valor.compareTo(Heap[largest].valor) > 0){
             largest = left;
         }
 
-        if (right < size && Heap[right].valor > Heap[largest].valor) {
+        if ((right < size) && Heap[right].valor.compareTo(Heap[largest].valor) > 0) {
             largest = right;
         }
 
@@ -58,10 +60,25 @@ public class Heap {
         Heap[pos_hijo] = temporal;
     }
 
-    public void desencolar(){
+    public Nodo desencolar(){
         // la idea sera intercambiar el nodo hoja(minimo) con el max, eliminar la hoja y poner en el array de res el valor del max desecolado
-        
-        hoja = Heap[size]
+        Nodo max = Heap[0];
+    
+        this.intercambiar(size,0);
+        this.size --;
+        this.maxHeap(0);
 
+        return max;
+
+    }
+
+    public Router[] HeapSort(int tam){
+        Router[] res = new Router[tam + 1];
+
+        for (int i = 0 ; i <= tam; i++){
+            
+        }
+
+        return res;
     }
 }
