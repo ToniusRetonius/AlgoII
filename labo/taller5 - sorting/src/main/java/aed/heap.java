@@ -2,29 +2,31 @@ package aed;
 
 public class Heap{
 
-    public Nodo[] Heap;
+    public Router[] Heap;
     public int size;
-    // cambiar tipo
 
-    public class Nodo {
-        Router valor;
+    public class Router {
+        private int _id;
+        private int _trafico;
 
-        public Nodo(Router val){
-            this.valor = val;
+        public Router(int id, int trafico) {
+            _id = id;
+            _trafico = trafico;
         }
     }
 
     public Heap(Router[] arr){
-        int i = 0;
-        int len = arr.length - 1;
-        Nodo[] Heap = new Nodo[size];
+       size = arr.length - 1;
+       Heap = new Router[size];
 
-        while(i < len){
-            Heap[i] = new Nodo(arr[i]);
-            i++;
-        }
+       for (int i = 0; i < size; i++){
+            Heap[i] = new Router(arr[i]._id, arr[i]._trafico);
+       }
         // arma el heap
         // O(n)
+        construirMaxHeap();
+        // lo hace máx heap
+        // en O(n) + O(n log n)
     }
 
     public void construirMaxHeap(){
@@ -37,11 +39,11 @@ public class Heap{
         int right = 2 * i + 2;
         int largest = i;
 
-        if ((left < size) && Heap[left].valor.compareTo(Heap[largest].valor) > 0){
+        if ((left < size) && Heap[left]._trafico > (Heap[largest]._trafico)){
             largest = left;
         }
 
-        if ((right < size) && Heap[right].valor.compareTo(Heap[largest].valor) > 0) {
+        if ((right < size) && Heap[right]._trafico > (Heap[largest]._trafico) ) {
             largest = right;
         }
 
@@ -54,15 +56,15 @@ public class Heap{
 
     public void intercambiar(int pos_padre, int pos_hijo){
 
-        Nodo temporal;
+        Router temporal;
         temporal = Heap[pos_padre];
         Heap[pos_padre] = Heap[pos_hijo];
         Heap[pos_hijo] = temporal;
     }
 
-    public Nodo desencolar(){
+    public Router desencolar(){
         // la idea sera intercambiar el nodo hoja(minimo) con el max, eliminar la hoja y poner en el array de res el valor del max desecolado
-        Nodo max = Heap[0];
+        Router max = Heap[0];
     
         this.intercambiar(size,0);
         this.size --;
@@ -73,10 +75,10 @@ public class Heap{
     }
 
     public Router[] HeapSort(int tam){
-        Router[] res = new Router[tam + 1];
+        Router[] res = new Router[tam];
 
         for (int i = 0 ; i <= tam; i++){
-            
+            res[i] = this.desencolar();
         }
 
         return res;
