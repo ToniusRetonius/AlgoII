@@ -24,18 +24,46 @@ public class InternetToolkit {
     }
 
     public Router[] kTopRouters(Router[] routers, int k, int umbral) {
-        // vamos a hacer un max heap con las rutas de mayor trafico y extraer los k routers mayores que superan el umbral
-        // creamos el heap (verificar)
-        Heap heap_de_routers  = new Heap(routers);
-        heap_de_routers.construirMaxHeap();
+        // para que nos se nos vata de complejidad queremos que construir un heap con los valores que superen el umbral
+        // para luego devolver los k que cumplen 
+        // complejidad esperada O(n + k log n)
+        Router[] filtrada = new Router[routers.length];
+
+        // me armo un array con todos los elementos que cumplen el umbral 
+        // complejidad : O (n)
+       for (int i = 0; i < routers.length; i++){
+            if (routers[i].getTrafico() >= umbral) {
+                filtrada[i] = routers[i];
+            }
+       }
         
-        // me pide devolver a lo sumo k que cumplan con el umbral, por tanto la longitud de mi arr res sera 
-        int length_res = 0;
-        if (k <= umbral){
-            length_res = k;
-        } else {
-            length_res = umbral;
+       // ahora que tengo n elementos que cumplen el umbral, quiero los k mayores
+       // para eso puedo hacer heapsort en (k * log n)
+       Heap f = new Heap(filtrada);
+
+       Router[] ordenada = new Router[filtrada.length];
+
+       for (int i = 0; i < filtrada.length; i++){
+           ordenada[i] = f.desencolar();
         }
+        int res_length;
+        if (k > 0 && umbral > 0){
+            res_length = Math.min(k, umbral);
+        } else if (umbral <= 0){
+            res_length = k;
+        } else {
+            res_length = 0;
+        }
+
+        Router[] res = new Router[res_length];
+
+        for (int i = 0; i <  res_length ; i++){
+            res[i] = ordenada[i];
+        }
+
+        return res;
+
+    }
 
 
     public IPv4Address[] sortIPv4(String[] ipv4) {

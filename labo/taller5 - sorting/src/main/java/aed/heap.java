@@ -5,28 +5,18 @@ public class Heap{
     public Router[] Heap;
     public int size;
 
-    public class Router {
-        private int _id;
-        private int _trafico;
-
-        public Router(int id, int trafico) {
-            _id = id;
-            _trafico = trafico;
-        }
-    }
-
-    public Heap(Router[] arr){
-       size = arr.length - 1;
+    public Heap(aed.Router[] arr){
+       size = arr.length;
        Heap = new Router[size];
+       int i = 0;
 
-       for (int i = 0; i < size; i++){
-            Heap[i] = new Router(arr[i]._id, arr[i]._trafico);
+       while (i < size) {
+            Heap[i] = arr[i];
+            i++;
        }
-        // arma el heap
-        // O(n)
-        construirMaxHeap();
-        // lo hace máx heap
-        // en O(n) + O(n log n)
+
+       construirMaxHeap();
+
     }
 
     public void construirMaxHeap(){
@@ -64,23 +54,16 @@ public class Heap{
 
     public Router desencolar(){
         // la idea sera intercambiar el nodo hoja(minimo) con el max, eliminar la hoja y poner en el array de res el valor del max desecolado
-        Router max = Heap[0];
-    
-        this.intercambiar(size,0);
-        this.size --;
-        this.maxHeap(0);
+        if (this.size == 0){
+            return null;
+        } else{
+            Router max = Heap[0];
+        
+            this.intercambiar(size - 1 ,0);
+            this.maxHeap(0);
+            this.size --;
 
-        return max;
-
-    }
-
-    public Router[] HeapSort(int tam){
-        Router[] res = new Router[tam];
-
-        for (int i = 0 ; i <= tam; i++){
-            res[i] = this.desencolar();
+            return max;
         }
-
-        return res;
     }
 }

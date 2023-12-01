@@ -1,8 +1,9 @@
 package aed;
 
 public class Router implements Comparable<Router> {
-    private int _id;
-    private int _trafico;
+    public int _id;
+    public int _trafico;
+
     public Router(int id, int trafico) {
         _id = id;
         _trafico = trafico;
