@@ -23,52 +23,59 @@ public class InternetToolkit {
         return fragments;
     }
 
-    public Router[] kTopRouters(Router[] routers, int k, int umbral) {
-        // para que nos se nos vata de complejidad queremos que construir un heap con los valores que superen el umbral
-        // para luego devolver los k que cumplen 
-        // complejidad esperada O(n + k log n)
-        Router[] filtrada = new Router[routers.length];
-
-        // me armo un array con todos los elementos que cumplen el umbral 
-        // complejidad : O (n)
-       for (int i = 0; i < routers.length; i++){
-            if (routers[i].getTrafico() >= umbral) {
-                filtrada[i] = routers[i];
+    public int cumplen(Router[] r, int umbral){
+        int res = 0;
+        for(int i = 0; i < r.length; i++){
+            if (r[i].getTrafico() > umbral){
+                res++;
             }
-       }
-        
-       // ahora que tengo n elementos que cumplen el umbral, quiero los k mayores
-       // para eso puedo hacer heapsort en (k * log n)
-       Heap f = new Heap(filtrada);
-
-       Router[] ordenada = new Router[filtrada.length];
-
-       for (int i = 0; i < filtrada.length; i++){
-           ordenada[i] = f.desencolar();
         }
-        int res_length;
-        if (k > 0 && umbral > 0){
-            res_length = Math.min(k, umbral);
-        } else if (umbral <= 0){
-            res_length = k;
-        } else {
-            res_length = 0;
-        }
-
-        Router[] res = new Router[res_length];
-
-        for (int i = 0; i <  res_length ; i++){
-            res[i] = ordenada[i];
-        }
-
         return res;
-
     }
 
+    public Router[] kTopRouters(Router[] routers, int k, int umbral){
+        int pasan_umbral = cumplen(routers, umbral);
+        Heap heap = new Heap(routers);
+        Router[] res = new Router[Math.min(k, pasan_umbral)];
+        
+        for(int j = 0; j < res.length; j++){
+            Router max = heap.maximo();
+            heap.descencolar();
+            if (max.getTrafico() > umbral) {
+                res[j] = max;
+            } else {
+                j--;
+            }
+        }
+        return res;
+    }
 
     public IPv4Address[] sortIPv4(String[] ipv4) {
-        // IMPLEMENTAR
-        return null;
+        IPv4Address[] res = new IPv4Address[ipv4.length];
+
+        for(int i = 0; i < ipv4.length; i++){
+            res[i] = new IPv4Address(ipv4[i]);
+        }    
+
+        for(int i = 0; i < res.length - 1; i++){
+            for(int j = 0; j < res.length - i - 1; j++){
+                IPv4Address direc1 = res[j];
+                IPv4Address direc2 = res[j+1];
+                int octeto = 0;
+                while(octeto < 4) {
+                    if(direc1.getOctet(octeto) < direc2.getOctet(octeto)){
+                        octeto = 4;
+                    } else if (direc1.getOctet(octeto) > direc2.getOctet(octeto)){
+                        res[j] = res[j+1];
+                        res[j+1] = direc1;
+                        octeto = 4;
+                    } else {
+                        octeto++;
+                    }
+                }
+            }
+        }
+        return res;
     }
 
 }
