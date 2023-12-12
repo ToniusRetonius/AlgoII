@@ -1,50 +1,44 @@
 package aed;
 
-
 public class InternetToolkit {
     public InternetToolkit() {
-        // hay que implemantar algo aca??
     }
 
+
     public Fragment[] tcpReorder(Fragment[] fragments) {
-        // vamos a implementar insertion sort 
-        
-        for (int i = 1 ; i < fragments.length ; i++){
-            Fragment actual = fragments[i];
+        for (int i = 1; i < fragments.length; i ++){
             int j = i - 1;
-
-            while (j >= 0 && (fragments[j].compareTo(actual) > 0)){
+            Fragment elem = fragments[i]; 
+            while(j>= 0 && fragments[j].compareTo(elem) > 0){
                 fragments[j + 1] = fragments[j];
-                fragments[j] = actual;
-                j--;
+                j --;
+                fragments[j + 1] = elem;
             }
-        } 
-
+        }
         return fragments;
     }
 
-    public int cumplen(Router[] r, int umbral){
+    public int superanElUmbral(Router[] routers, int umbral){
         int res = 0;
-        for(int i = 0; i < r.length; i++){
-            if (r[i].getTrafico() > umbral){
+        for(int i = 0; i < routers.length; i++){
+            if (routers[i].getTrafico() > umbral){
                 res++;
             }
         }
         return res;
     }
 
-    public Router[] kTopRouters(Router[] routers, int k, int umbral){
-        int pasan_umbral = cumplen(routers, umbral);
+    public Router[] kTopRouters(Router[] routers, int k, int umbral) {
+        int cantSuperanUmbral = superanElUmbral(routers, umbral);
         Heap heap = new Heap(routers);
-        Router[] res = new Router[Math.min(k, pasan_umbral)];
-        
-        for(int j = 0; j < res.length; j++){
+        Router[] res = new Router[Math.min(k, cantSuperanUmbral)];
+        for (int i = 0; i < res.length ; i++){
             Router max = heap.maximo();
             heap.descencolar();
-            if (max.getTrafico() > umbral) {
-                res[j] = max;
+            if (max.getTrafico() > umbral){
+                res[i] = max;
             } else {
-                j--;
+                i--;
             }
         }
         return res;

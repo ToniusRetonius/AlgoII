@@ -212,6 +212,7 @@ class InternetToolkitTests {
         assertTrue(ordenado.length == original.length);
 
         for(int i = 0; i < ordenado.length; i++){
+            System.out.println(i);
             assertTrue(ordenado[i].toString().compareTo(original[i]) == 0);
         }
     }    
