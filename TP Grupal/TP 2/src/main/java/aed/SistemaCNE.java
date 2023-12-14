@@ -1,4 +1,7 @@
 package aed;
+
+//! No pasa el test obteneresultadosDiputadosVariosDistritos (corregido) y tampoco procesan correctamente una secuencia del estilo: registrar mesa, obtener diputados, registrar mesa, obtener diputados, todo sobre el mismo distrito
+
 public class SistemaCNE {
     private String[] _nombresPartidos;
     // [str, str, ...] <- indice = id.partido
@@ -18,13 +21,12 @@ public class SistemaCNE {
     public int[] suma_votos;
     public int[][] bancas_totales;
     public int[] votosCumplenUmbral;
-    public int[] bancas_partido;
 
     public class VotosPartido{
         private int presidente;
         private int diputados;
 
-        //! Faltan complejidades e irep
+        //! Falta irep(duda ,lo pusimos abajo)
 
         // Complejidad: O(1)
         VotosPartido(int presidente, int diputados) {
@@ -70,17 +72,19 @@ public class SistemaCNE {
         bancas_totales = new int[nombresDistritos.length][nombresPartidos.length];
         // Complejidad: O(P)
         votosCumplenUmbral = new int[nombresPartidos.length];
-        // Complejidad: O(P)
-        bancas_partido = new int[_nombresPartidos.length];
+
 
         int i = 0;
         int j = 0;
-        // Complejidad: O(D*P)
+
+        
+        //! Falta la complejidad de estos dos while (corregido)
+        // Complejidad: O(P)
         while (i < nombresPartidos.length) {
             _nombresPartidos[i] = nombresPartidos[i];
             i++;
         }
-
+        // Complejidad O(D)
         while (j < nombresDistritos.length) {
             _diputadosPorDistrito[j] = diputadosPorDistrito[j];
             _nombresDistritos[j] = nombresDistritos[j];
@@ -104,16 +108,9 @@ public class SistemaCNE {
         return _diputadosPorDistrito[idDistrito];
     }
 
-
-    // Complejidad: O(log(P))
-    public String distritoDeMesa(int idMesa) {
-        int izquierda = 0;
-        int derecha = this._ultimasMesasDistritos.length - 1;
-        int medio = derecha / 2;
-
-        if (idMesa < _ultimasMesasDistritos[0]) {
-            return _nombresDistritos[0];
-        } else {
+    //ESTA BUSQUEDA BINARIA SOLO SIRVE PARA ESTOS DOS ENUNCIADOS EN ESPECIFICO , SI QUIERO REUTILIZARLA NO DEBERIA ASIGNAR 0 A IZQ
+    public int busquedaBinaria(int idMesa ,int izquierda , int derecha , int medio ){
+        if (idMesa >= _ultimasMesasDistritos[0]) {
             while (derecha - izquierda > 1) {
                 if (idMesa < _ultimasMesasDistritos[medio]) {
                     derecha = medio;
@@ -121,14 +118,24 @@ public class SistemaCNE {
                     izquierda = medio;
                 }
                 medio = (derecha + izquierda) / 2;
-            } // O(log(n))
+            }
 
             if (idMesa >= _ultimasMesasDistritos[izquierda]) {
-                return _nombresDistritos[izquierda + 1];
+                return (izquierda + 1);
             } else {
-                return _nombresDistritos[izquierda];
+                return izquierda;
             }
+        }else{
+            return 0; 
         }
+    }    
+
+    // Complejidad: O(log(P))
+    public String distritoDeMesa(int idMesa) {
+        int izquierda = 0;
+        int derecha = this._ultimasMesasDistritos.length - 1;
+        int medio = derecha / 2;
+        return _nombresDistritos[busquedaBinaria(idMesa, izquierda, derecha, medio)];
     }
 
     //Complejidad: O(P + log(D))
@@ -136,27 +143,11 @@ public class SistemaCNE {
         int izquierda = 0;
         int derecha = this._ultimasMesasDistritos.length - 1;
         int medio = derecha / 2;
-        int res = 0;
 
-        //! Reusen el codigo que hicieron que hace exactamente esto, no copien y peguen la busqueda binaria, llamen la funcion
+        //! Reusen el codigo que hicieron que hace exactamente esto, no copien y peguen la busqueda binaria, llamen la funcion (corregido)
         // Complejidad: O(log(D))
-        if (idMesa >= _ultimasMesasDistritos[0]) {
-            while (derecha - izquierda > 1) {
-                if (idMesa < _ultimasMesasDistritos[medio]) {
-                    derecha = medio;
-                    medio = (derecha - izquierda) / 2;
-                } else {
-                    izquierda = medio;
-                    medio = (derecha + izquierda) / 2;
-                }
-            }
-
-            if (idMesa >= _ultimasMesasDistritos[izquierda]) {
-                res = izquierda + 1;
-            } else {
-                res = izquierda;
-            }
-        }
+        int res = busquedaBinaria(idMesa, izquierda, derecha, medio);
+        
 
 
         // Complejidad: O(P)
@@ -220,31 +211,28 @@ public class SistemaCNE {
     //Complejidad: O(D_d * log(P))
     public int[] resultadosDiputados(int idDistrito) {
         int _cantBancas = _diputadosPorDistrito[idDistrito];
-        // Complejidad: O(D_d)
         Heap distrito = heap_por_distrito[idDistrito];
+        int [] bancas_partido = new int[(votos_diputados[idDistrito]).length];
 
         if (this.fueVisitado[idDistrito] == 1){
             return this.bancas_totales[idDistrito];
         } else {
-            int k = 0;
             Heap.Nodo raiz;
             int indice;
-            int divisor;
 
-            // O(D_d)
-            while (k < _cantBancas ){
+            //! No es esa la complejidad del ciclo (corregido)
+            //! Por qué ponen k y no directamente un 0 (corregido)
+            while (0 < _cantBancas ){
                 raiz = distrito.Heap[0];
                 indice = raiz.indice;
-                this.bancas_partido[indice]++;
-                divisor = this.bancas_partido[indice];
-                // Log(P)
-                distrito.modificarRaiz(divisor + 1);
+                bancas_partido[indice]++;
+                distrito.modificarRaiz(bancas_partido[indice] + 1);
                 _cantBancas--;
             }
-            bancas_totales[idDistrito] = this.bancas_partido;
+            bancas_totales[idDistrito] = bancas_partido;
             fueVisitado[idDistrito] = 1;
         }
-        return this.bancas_partido;
+        return bancas_partido;
     }
 
     //Complejidad: O(1)
@@ -275,9 +263,7 @@ public class SistemaCNE {
  - Todos los heaps van a tener igual cantidad de nodos que elementos de _nombrePartidos.
  - _bancasPartido siempre va a tener la misma longitud que _nombrePartidos y va a ver tantas _bancasPartidos dentro de _bancasTotales como distritos en el sistema
  - Todo nodo guarda su respectivo indice (original) en la lista _nombrepartido, un valor con los votos totales que siempre va a ser igual a la cantidad de votos que el partido recibio en ese distrito para los diputados y un valor que cambia durante la asignación de bancas.
- - El heap siempre va estar ordenado de mayor a menor y el mayor siempre va a ser la raiz, representando al siguiente partido a tener una banca asignada para sí
  - _bancasPartido siempre va tener la misma longitud que nombre partidos.
  - _bancas_totales va a tener tantos elementos (_bancasPartido) como distritos en el sistema.
 
 */
-

@@ -306,10 +306,9 @@ class SistemaCNETests {
         assertEquals(2, sistema.resultadosDiputados(2)[3]);
         assertEquals(1, sistema.resultadosDiputados(2)[4]);
 
+        assertEquals(18, sistema.resultadosDiputados(0)[0]);
         assertEquals(5, sistema.resultadosDiputados(0)[1]);
         assertEquals(10, sistema.resultadosDiputados(0)[2]);        
-        assertEquals(18, sistema.resultadosDiputados(0)[0]);
-
         assertEquals(24, sistema.resultadosDiputados(0)[3]);
         assertEquals(13, sistema.resultadosDiputados(0)[4]);
 
