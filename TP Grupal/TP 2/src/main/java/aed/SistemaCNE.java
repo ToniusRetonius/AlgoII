@@ -1,6 +1,6 @@
 package aed;
 
-//! No pasa el test obteneresultadosDiputadosVariosDistritos (corregido) y tampoco procesan correctamente una secuencia del estilo: registrar mesa, obtener diputados, registrar mesa, obtener diputados, todo sobre el mismo distrito
+import java.util.Objects;
 
 public class SistemaCNE {
     private String[] _nombresPartidos;
@@ -25,8 +25,6 @@ public class SistemaCNE {
     public class VotosPartido{
         private int presidente;
         private int diputados;
-
-        //! Falta irep(duda ,lo pusimos abajo)
 
         // Complejidad: O(1)
         VotosPartido(int presidente, int diputados) {
@@ -77,8 +75,6 @@ public class SistemaCNE {
         int i = 0;
         int j = 0;
 
-        
-        //! Falta la complejidad de estos dos while (corregido)
         // Complejidad: O(P)
         while (i < nombresPartidos.length) {
             _nombresPartidos[i] = nombresPartidos[i];
@@ -143,12 +139,19 @@ public class SistemaCNE {
         int izquierda = 0;
         int derecha = this._ultimasMesasDistritos.length - 1;
         int medio = derecha / 2;
+        int k = 0;
 
-        //! Reusen el codigo que hicieron que hace exactamente esto, no copien y peguen la busqueda binaria, llamen la funcion (corregido)
+        while(k < _nombresDistritos.length){
+            if (Objects.equals(_nombresDistritos[k], distritoDeMesa(idMesa))){
+                break;
+            }
+            k++;
+        }
+        fueVisitado[k] = 0;
+
+
         // Complejidad: O(log(D))
         int res = busquedaBinaria(idMesa, izquierda, derecha, medio);
-        
-
 
         // Complejidad: O(P)
         int i = 0;
@@ -208,7 +211,7 @@ public class SistemaCNE {
     }
 
 
-    //Complejidad: O(D_d * log(P))
+    //Complejidad: O(P + D_d * log(P)) = O(D_d * log(P))
     public int[] resultadosDiputados(int idDistrito) {
         int _cantBancas = _diputadosPorDistrito[idDistrito];
         Heap distrito = heap_por_distrito[idDistrito];
@@ -220,8 +223,6 @@ public class SistemaCNE {
             Heap.Nodo raiz;
             int indice;
 
-            //! No es esa la complejidad del ciclo (corregido)
-            //! Por qué ponen k y no directamente un 0 (corregido)
             while (0 < _cantBancas ){
                 raiz = distrito.Heap[0];
                 indice = raiz.indice;
@@ -265,5 +266,5 @@ public class SistemaCNE {
  - Todo nodo guarda su respectivo indice (original) en la lista _nombrepartido, un valor con los votos totales que siempre va a ser igual a la cantidad de votos que el partido recibio en ese distrito para los diputados y un valor que cambia durante la asignación de bancas.
  - _bancasPartido siempre va tener la misma longitud que nombre partidos.
  - _bancas_totales va a tener tantos elementos (_bancasPartido) como distritos en el sistema.
-
+ - Cada posición en heap_por_distrito corresponde al Heap el cual almacena la cantidad de votos que se obtiene en cada distrito por partido.
 */
